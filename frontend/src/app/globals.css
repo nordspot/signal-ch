@@ -1,0 +1,59 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-white text-signal-navy dark:bg-signal-dark-bg dark:text-gray-100;
+    font-family: "Inter", system-ui, sans-serif;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: "Lora", Georgia, serif;
+  }
+}
+
+@layer components {
+  .card {
+    @apply bg-white dark:bg-signal-dark-card rounded-lg border border-gray-200 dark:border-gray-700 p-6 shadow-sm;
+  }
+
+  .btn-primary {
+    @apply bg-signal-blue text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors;
+  }
+
+  .btn-secondary {
+    @apply bg-gray-100 dark:bg-gray-800 text-signal-navy dark:text-gray-200 px-4 py-2 rounded-lg font-medium hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors;
+  }
+
+  .btn-danger {
+    @apply bg-signal-red text-white px-4 py-2 rounded-lg font-medium hover:bg-red-700 transition-colors;
+  }
+
+  .quality-bar {
+    @apply h-2 rounded-full bg-gray-200 dark:bg-gray-700 overflow-hidden;
+  }
+
+  .quality-fill {
+    @apply h-full rounded-full transition-all duration-500;
+  }
+
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+
+  .badge-politics { @apply bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200; }
+  .badge-economy { @apply bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200; }
+  .badge-health { @apply bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200; }
+  .badge-environment { @apply bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200; }
+  .badge-technology { @apply bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200; }
+  .badge-society { @apply bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200; }
+  .badge-legal { @apply bg-slate-100 text-slate-800 dark:bg-slate-900 dark:text-slate-200; }
+  .badge-sport { @apply bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200; }
+  .badge-culture { @apply bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-200; }
+  .badge-science { @apply bg-cyan-100 text-cyan-800 dark:bg-cyan-900 dark:text-cyan-200; }
+  .badge-education { @apply bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200; }
+  .badge-infrastructure { @apply bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200; }
+  .badge-international { @apply bg-teal-100 text-teal-800 dark:bg-teal-900 dark:text-teal-200; }
+  .badge-local { @apply bg-lime-100 text-lime-800 dark:bg-lime-900 dark:text-lime-200; }
+}

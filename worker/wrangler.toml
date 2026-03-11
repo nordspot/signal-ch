@@ -1,0 +1,52 @@
+name = "signal-api"
+main = "src/index.ts"
+compatibility_date = "2024-03-01"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+APP_ENV = "production"
+JWT_ALGORITHM = "HS256"
+JWT_EXPIRATION_HOURS = "24"
+
+# D1 Database
+[[d1_databases]]
+binding = "DB"
+database_name = "signal-db"
+database_id = "" # filled after creation
+
+# Vectorize Index
+[[vectorize]]
+binding = "VECTORIZE"
+index_name = "signal-embeddings"
+
+# R2 Object Storage
+[[r2_buckets]]
+binding = "R2"
+bucket_name = "signal-media"
+
+# KV for caching
+[[kv_namespaces]]
+binding = "CACHE"
+id = "" # filled after creation
+
+# Queue for async ingestion
+[[queues.producers]]
+queue = "signal-ingestion"
+binding = "INGESTION_QUEUE"
+
+[[queues.consumers]]
+queue = "signal-ingestion"
+max_batch_size = 10
+max_retries = 3
+
+# Cron triggers for scheduled ingestion
+[triggers]
+crons = [
+  "*/30 * * * *",
+  "0 3 * * *"
+]
+
+# Secrets (set via wrangler secret put):
+# JWT_SECRET
+# ANTHROPIC_API_KEY
+# COHERE_API_KEY
