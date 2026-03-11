@@ -12,7 +12,7 @@ JWT_EXPIRATION_HOURS = "24"
 [[d1_databases]]
 binding = "DB"
 database_name = "signal-db"
-database_id = "" # filled after creation
+database_id = "a13e21a9-36d0-4b71-93cb-c530cd1f6b2a"
 
 # Vectorize Index
 [[vectorize]]
@@ -27,17 +27,17 @@ bucket_name = "signal-media"
 # KV for caching
 [[kv_namespaces]]
 binding = "CACHE"
-id = "" # filled after creation
+id = "38db1e60fd45426eb9d7664b2cf7b2ef"
 
-# Queue for async ingestion
-[[queues.producers]]
-queue = "signal-ingestion"
-binding = "INGESTION_QUEUE"
-
-[[queues.consumers]]
-queue = "signal-ingestion"
-max_batch_size = 10
-max_retries = 3
+# Queue for async ingestion (requires Workers Paid plan)
+# [[queues.producers]]
+# queue = "signal-ingestion"
+# binding = "INGESTION_QUEUE"
+#
+# [[queues.consumers]]
+# queue = "signal-ingestion"
+# max_batch_size = 10
+# max_retries = 3
 
 # Cron triggers for scheduled ingestion
 [triggers]

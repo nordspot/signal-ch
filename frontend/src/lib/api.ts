@@ -1,4 +1,4 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://signal-api.billowing-leaf-4d6a.workers.dev";
 
 class ApiClient {
   private token: string | null = null;

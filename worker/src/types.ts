@@ -3,7 +3,7 @@ export interface Env {
   VECTORIZE: VectorizeIndex;
   R2: R2Bucket;
   CACHE: KVNamespace;
-  INGESTION_QUEUE: Queue;
+  INGESTION_QUEUE?: Queue;
   JWT_SECRET: string;
   ANTHROPIC_API_KEY: string;
   COHERE_API_KEY: string;

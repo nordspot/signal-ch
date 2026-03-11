@@ -1,5 +1,14 @@
-import type { Env } from '../types';
+import type { Env, QueueMessage } from '../types';
 import { parseJson } from '../utils';
+import { dispatchMessage } from './queue';
+
+async function enqueue(env: Env, msg: QueueMessage): Promise<void> {
+  if (env.INGESTION_QUEUE) {
+    await env.INGESTION_QUEUE.send(msg);
+  } else {
+    await dispatchMessage(msg, env);
+  }
+}
 
 export async function runScheduledIngestion(
   event: ScheduledEvent,
@@ -21,7 +30,7 @@ async function triggerGovernmentIngestion(env: Env): Promise<void> {
   const connectors = ['admin_ch', 'curia_vista', 'opendata_swiss', 'sogc', 'bfs'];
 
   for (const connector of connectors) {
-    await env.INGESTION_QUEUE.send({
+    await enqueue(env, {
       type: 'ingest_api',
       payload: { connector },
     });
@@ -40,7 +49,7 @@ async function triggerRssIngestion(env: Env): Promise<void> {
     );
 
     for (const feed of feeds) {
-      await env.INGESTION_QUEUE.send({
+      await enqueue(env, {
         type: 'ingest_rss',
         payload: {
           publisher_id: pub.id,
@@ -95,7 +104,7 @@ async function runDailyMaintenance(env: Env): Promise<void> {
   ).all();
 
   for (const io of unsyncedIOs.results) {
-    await env.INGESTION_QUEUE.send({
+    await enqueue(env, {
       type: 'sync_search',
       payload: { io_id: io.id },
     });

@@ -1,29 +1,32 @@
 import type { Env, QueueMessage } from '../types';
 import { uuid, now, jsonCol } from '../utils';
 
+// Route a message: use Queue if available, otherwise process directly
+async function enqueue(env: Env, msg: QueueMessage): Promise<void> {
+  if (env.INGESTION_QUEUE) {
+    await env.INGESTION_QUEUE.send(msg);
+  } else {
+    await dispatchMessage(msg, env);
+  }
+}
+
+export async function dispatchMessage(msg: QueueMessage, env: Env): Promise<void> {
+  switch (msg.type) {
+    case 'ingest_rss': await ingestRssFeed(msg.payload, env); break;
+    case 'ingest_api': await ingestApiSource(msg.payload, env); break;
+    case 'process_source': await processSource(msg.payload, env); break;
+    case 'synthesize_io': await synthesizeIO(msg.payload, env); break;
+    case 'sync_search': await syncSearchIndex(msg.payload, env); break;
+  }
+}
+
 export async function handleIngestionQueue(
   batch: MessageBatch<QueueMessage>,
   env: Env
 ): Promise<void> {
   for (const msg of batch.messages) {
     try {
-      switch (msg.body.type) {
-        case 'ingest_rss':
-          await ingestRssFeed(msg.body.payload, env);
-          break;
-        case 'ingest_api':
-          await ingestApiSource(msg.body.payload, env);
-          break;
-        case 'process_source':
-          await processSource(msg.body.payload, env);
-          break;
-        case 'synthesize_io':
-          await synthesizeIO(msg.body.payload, env);
-          break;
-        case 'sync_search':
-          await syncSearchIndex(msg.body.payload, env);
-          break;
-      }
+      await dispatchMessage(msg.body, env);
       msg.ack();
     } catch (e) {
       console.error(`Queue message failed: ${msg.body.type}`, e);
@@ -85,7 +88,7 @@ async function ingestRssFeed(payload: Record<string, unknown>, env: Env): Promis
     ).run();
 
     // Enqueue source processing
-    await env.INGESTION_QUEUE.send({
+    await enqueue(env, {
       type: 'process_source',
       payload: { source_id: sourceId },
     });
@@ -150,7 +153,7 @@ async function ingestAdminCh(env: Env): Promise<void> {
       now()
     ).run();
 
-    await env.INGESTION_QUEUE.send({
+    await enqueue(env, {
       type: 'process_source',
       payload: { source_id: sourceId },
     });
@@ -191,7 +194,7 @@ async function ingestCuriaVista(env: Env): Promise<void> {
       now()
     ).run();
 
-    await env.INGESTION_QUEUE.send({
+    await enqueue(env, {
       type: 'process_source',
       payload: { source_id: sourceId },
     });
@@ -235,7 +238,7 @@ async function ingestOpendataSwiss(env: Env): Promise<void> {
       now()
     ).run();
 
-    await env.INGESTION_QUEUE.send({
+    await enqueue(env, {
       type: 'process_source',
       payload: { source_id: sourceId },
     });
@@ -276,7 +279,7 @@ async function ingestSOGC(env: Env): Promise<void> {
       now()
     ).run();
 
-    await env.INGESTION_QUEUE.send({
+    await enqueue(env, {
       type: 'process_source',
       payload: { source_id: sourceId },
     });
@@ -317,7 +320,7 @@ async function ingestBFS(env: Env): Promise<void> {
       now()
     ).run();
 
-    await env.INGESTION_QUEUE.send({
+    await enqueue(env, {
       type: 'process_source',
       payload: { source_id: sourceId },
     });
@@ -366,7 +369,7 @@ async function processSource(payload: Record<string, unknown>, env: Env): Promis
 
   // Enqueue synthesis if we have enough sources
   if ((sourceCount?.c as number) >= 2) {
-    await env.INGESTION_QUEUE.send({
+    await enqueue(env, {
       type: 'synthesize_io',
       payload: { io_id: ioId },
     });
