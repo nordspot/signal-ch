@@ -54,7 +54,7 @@ export default function EntitiesPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {data?.items.map((entity) => (
-          <Link key={entity.id} href={`/entity/${entity.id}`} className="card hover:shadow-md transition-shadow">
+          <Link key={entity.id} href={`/entity?id=${entity.id}`} className="card hover:shadow-md transition-shadow">
             <div className="flex justify-between items-start">
               <div>
                 <h3 className="font-semibold">{entity.canonical_name}</h3>

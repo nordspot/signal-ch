@@ -140,6 +140,8 @@ export interface User {
   preferred_language: string;
   canton: string | null;
   tier: string;
+  is_admin: boolean;
+  is_editor: boolean;
   created_at: string;
 }
 

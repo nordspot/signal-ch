@@ -1,5 +1,5 @@
 import { NextIntlClientProvider } from "next-intl";
-import { getMessages } from "next-intl/server";
+import { getMessages, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import "../globals.css";
 import { Navigation } from "@/components/Navigation";
@@ -17,12 +17,14 @@ export const metadata = {
 
 export default async function LocaleLayout({
   children,
-  params: { locale },
+  params,
 }: {
   children: React.ReactNode;
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }) {
+  const { locale } = await params;
   if (!locales.includes(locale)) notFound();
+  setRequestLocale(locale);
 
   const messages = await getMessages();
 

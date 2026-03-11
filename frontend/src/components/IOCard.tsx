@@ -17,7 +17,7 @@ export function IOCard({ io }: { io: IO }) {
   const content = getContent(io, locale);
 
   return (
-    <Link href={`/io/${io.id}`} className="card block hover:shadow-md transition-shadow group">
+    <Link href={`/io?id=${io.id}`} className="card block hover:shadow-md transition-shadow group">
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-2">

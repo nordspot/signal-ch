@@ -45,3 +45,6 @@ logs/
 htmlcov/
 .coverage
 coverage/
+frontend/.vercel/
+tsconfig.tsbuildinfo
+next-env.d.ts
