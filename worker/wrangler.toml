@@ -19,6 +19,10 @@ database_id = "a13e21a9-36d0-4b71-93cb-c530cd1f6b2a"
 binding = "VECTORIZE"
 index_name = "signal-embeddings"
 
+# Workers AI (embeddings)
+[ai]
+binding = "AI"
+
 # R2 Object Storage
 [[r2_buckets]]
 binding = "R2"
@@ -49,4 +53,3 @@ crons = [
 # Secrets (set via wrangler secret put):
 # JWT_SECRET
 # ANTHROPIC_API_KEY
-# COHERE_API_KEY

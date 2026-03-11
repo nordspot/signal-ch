@@ -70,25 +70,11 @@ export function searchRoutes() {
 }
 
 async function generateQueryEmbedding(text: string, env: Env): Promise<number[] | null> {
-  if (!env.COHERE_API_KEY) return null;
-
   try {
-    const response = await fetch('https://api.cohere.ai/v1/embed', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${env.COHERE_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        texts: [text],
-        model: 'embed-multilingual-v3.0',
-        input_type: 'search_query',
-        embedding_types: ['float'],
-      }),
-    });
-
-    const data = await response.json() as any;
-    return data.embeddings?.float?.[0] ?? null;
+    const result = await env.AI.run('@cf/baai/bge-m3', {
+      text: [text],
+    }) as { data: number[][] };
+    return result.data?.[0] ?? null;
   } catch {
     return null;
   }

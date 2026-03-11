@@ -3,10 +3,10 @@ export interface Env {
   VECTORIZE: VectorizeIndex;
   R2: R2Bucket;
   CACHE: KVNamespace;
+  AI: Ai;
   INGESTION_QUEUE?: Queue;
   JWT_SECRET: string;
   ANTHROPIC_API_KEY: string;
-  COHERE_API_KEY: string;
   APP_ENV: string;
 }
 

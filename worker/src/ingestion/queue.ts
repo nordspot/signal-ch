@@ -523,29 +523,15 @@ async function syncSearchIndex(payload: Record<string, unknown>, env: Env): Prom
   const contentDe = JSON.parse((version.content_de as string) || '{}');
   const textForEmbedding = `${contentDe.title || ''} ${contentDe.summary || ''} ${contentDe.lead || ''}`;
 
-  // Generate embedding
+  // Generate embedding via Cloudflare Workers AI
   let embedding: number[] | null = null;
 
-  if (env.COHERE_API_KEY) {
-    try {
-      const response = await fetch('https://api.cohere.ai/v1/embed', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${env.COHERE_API_KEY}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          texts: [textForEmbedding],
-          model: 'embed-multilingual-v3.0',
-          input_type: 'search_document',
-          embedding_types: ['float'],
-        }),
-      });
-
-      const data = await response.json() as any;
-      embedding = data.embeddings?.float?.[0] ?? null;
-    } catch { /* continue with placeholder */ }
-  }
+  try {
+    const result = await env.AI.run('@cf/baai/bge-m3', {
+      text: [textForEmbedding],
+    }) as { data: number[][] };
+    embedding = result.data?.[0] ?? null;
+  } catch { /* continue with placeholder */ }
 
   // Upsert to Vectorize
   await env.VECTORIZE.upsert([{
